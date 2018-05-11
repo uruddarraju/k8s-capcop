@@ -2,11 +2,12 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/spf13/cobra"
-	"k8s.io/kubernetes/pkg/util/logs"
-	"github.com/spf13/pflag"
 	"github.com/ebayinc/capcop/cmd/app"
 	"github.com/ebayinc/capcop/pkg/kubernetes"
+	"github.com/ebayinc/capcop/pkg/prometheus"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"k8s.io/kubernetes/pkg/util/logs"
 )
 
 var cmd = &cobra.Command{
@@ -21,11 +22,10 @@ var cmd = &cobra.Command{
 var cop *app.CapCop
 
 func init() {
-	cop := &app.CapCop{}
+	cop = &app.CapCop{}
 	cop.AddFlags(pflag.CommandLine)
 	defer logs.FlushLogs()
 }
-
 
 func Run() {
 	log.Infof("Running capcop")
@@ -33,6 +33,7 @@ func Run() {
 
 func main() {
 	cop.ClientSet = kubernetes.DefaultClientSet(cop.KubeConfig)
+	prometheus.NewClient(cop.KubeConfig)
 	cmd.Execute()
 	return
 }

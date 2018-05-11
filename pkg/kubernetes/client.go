@@ -22,7 +22,6 @@ func DefaultClientSet(kubeconfig string) *kubernetes.Clientset {
 	if err != nil {
 		log.Errorf("Unable to build out of cluster config, continuing to try in cluster config")
 	} else if outClusterConfig != nil {
-		log.Infof("%s", outClusterConfig)
 		clientset, err = kubernetes.NewForConfig(outClusterConfig)
 		if err != nil {
 			log.Errorf("Unable to build out of cluster client, continuing to try in cluster client")
